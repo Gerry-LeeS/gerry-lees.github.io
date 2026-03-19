@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Linux Fundamentals — Gerry | Cybersecurity Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #0a0e13;
+      --surface:  #111820;
+      --border:   #1e2d3d;
+      --accent:   #00d4ff;
+      --accent2:  #00ff9d;
+      --text:     #c9d8e8;
+      --muted:    #4a6072;
+      --mono:     'Share Tech Mono', monospace;
+      --sans:     'DM Sans', sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-weight: 300;
+      min-height: 100vh;
+      line-height: 1.8;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── NAV ── */
+    nav {
+      padding: 2rem 0 0;
+    }
+
+    nav a {
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    nav a:hover { color: var(--accent); }
+    nav a::before { content: '← '; }
+
+    /* ── HEADER ── */
+    header {
+      padding: 3rem 0 2.5rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 3rem;
+    }
+
+    .meta {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-bottom: 1rem;
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .meta .tag { color: var(--accent2); }
+
+    h1 {
+      font-family: var(--mono);
+      font-size: clamp(1.4rem, 4vw, 2rem);
+      color: #fff;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+
+    .subtitle {
+      font-size: 1.05rem;
+      color: var(--muted);
+      max-width: 580px;
+    }
+
+    /* ── CONTENT ── */
+    .content h2 {
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      color: var(--accent);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin: 2.5rem 0 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .content h2::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .content p {
+      font-size: 1rem;
+      color: var(--text);
+      margin-bottom: 1.2rem;
+    }
+
+    /* ── CODE BLOCK ── */
+    .code-block {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      padding: 1.2rem 1.4rem;
+      margin: 1.5rem 0;
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      overflow-x: auto;
+    }
+
+    .code-block .line {
+      display: block;
+      color: var(--text);
+      margin-bottom: 0.3rem;
+    }
+
+    .code-block .line:last-child { margin-bottom: 0; }
+
+    .code-block .prompt { color: var(--accent2); }
+    .code-block .comment { color: var(--muted); }
+    .code-block .output { color: var(--muted); padding-left: 1rem; }
+
+    /* ── CALLOUT ── */
+    .callout {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent2);
+      padding: 1.2rem 1.4rem;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+    }
+
+    .callout-label {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--accent2);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    /* ── KEY COMMANDS TABLE ── */
+    .cmd-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+    }
+
+    .cmd-table th {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      text-align: left;
+      padding: 0.6rem 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .cmd-table td {
+      padding: 0.7rem 1rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+
+    .cmd-table tr:last-child td { border-bottom: none; }
+
+    .cmd-table .cmd {
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      color: var(--accent2);
+      white-space: nowrap;
+    }
+
+    .cmd-table .desc { color: var(--text); }
+    .cmd-table .soc { color: var(--muted); font-size: 0.85rem; }
+
+    /* ── TAKEAWAYS ── */
+    .takeaways {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 1.4rem 1.6rem;
+      margin: 2rem 0;
+    }
+
+    .takeaways ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .takeaways ul li {
+      font-size: 0.95rem;
+      color: var(--text);
+      padding: 0.4rem 0;
+      padding-left: 1.2rem;
+      position: relative;
+    }
+
+    .takeaways ul li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+      font-family: var(--mono);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem 0;
+      margin-top: 4rem;
+    }
+
+    .footer-text {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <nav><a href="/">home</a></nav>
+
+  <header>
+    <div class="meta">
+      <span>2026</span>
+      <span class="tag">#linux</span>
+      <span class="tag">#cli</span>
+      <span class="tag">#blue-team</span>
+      <span>TryHackMe — Cybersecurity 101</span>
+    </div>
+    <h1>Linux Fundamentals<br/>Why the Terminal Matters in Security</h1>
+    <p class="subtitle">
+      My first time using a CLI — what I learned, what clicked, and why command line
+      fluency is fundamental to SOC work.
+    </p>
+  </header>
+
+  <div class="content">
+
+    <h2>Background</h2>
+    <p>
+      Before starting TryHackMe, my closest experience with anything resembling a command
+      line was a BIOS — checking internal temperatures, resetting settings, that kind of
+      thing. A terminal was genuinely unfamiliar territory. I had used GUIs exclusively,
+      and the idea of navigating a system purely through typed commands felt slow and
+      unnatural.
+    </p>
+    <p>
+      Linux Fundamentals Parts 1, 2, and 3 on TryHackMe changed that — not completely, I still use a GUI predominantly,
+      but enough to understand why security professionals live in the terminal.
+    </p>
+
+    <h2>The Moment It Clicked</h2>
+    <p>
+      The clearest example came when I needed to find my IP address and SSH into a test
+      machine. Doing this through a GUI means navigating through multiple menus, finding
+      network settings, locating the IP, then finding and enabling remote access — easily
+      ten to fifteen clicks across several different windows.
+    </p>
+    <p>
+      In the terminal, the same task takes two lines:
+    </p>
+
+    <div class="code-block">
+      <span class="line"><span class="prompt">$</span> ipconfig</span>
+      <span class="line output">IPv4 Address: xx.xx.xx.xx</span>
+      <span class="line"> </span>
+      <span class="line"><span class="prompt">$</span> ssh user@xx.xx.xx.x</span>
+      <span class="line output">Connected to remote machine.</span>
+    </div>
+
+    <p>
+      That's when it stopped feeling like a handicap and started feeling like the right
+      tool. In a SOC context, speed matters — an analyst responding to an active incident
+      doesn't have time to click through GUI menus. The terminal is faster, more precise,
+      and leaves less room for error.
+    </p>
+
+    <h2>Key Commands — and Why They Matter in Security</h2>
+    <p>
+      Learning commands in isolation is one thing. Understanding why they matter to a
+      defender is another. Here are the ones that stood out:
+    </p>
+
+    <table class="cmd-table">
+      <thead>
+        <tr>
+          <th>Command</th>
+          <th>What it does</th>
+          <th>SOC relevance</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="cmd">whoami</td>
+          <td class="desc">Shows current user and privilege level</td>
+          <td class="soc">Tells you what access you have — critical in incident response and privilege escalation detection</td>
+        </tr>
+        <tr>
+          <td class="cmd">ipconfig / ip a</td>
+          <td class="desc">Displays network configuration including IP and MAC address</td>
+          <td class="soc">First step in network triage — unusual addresses can indicate compromise</td>
+        </tr>
+        <tr>
+          <td class="cmd">pwd</td>
+          <td class="desc">Prints current working directory</td>
+          <td class="soc">Orientation — knowing where you are in a filesystem matters when investigating a machine</td>
+        </tr>
+        <tr>
+          <td class="cmd">ls -la</td>
+          <td class="desc">Lists all files including hidden, with permissions</td>
+          <td class="soc">Hidden files and unusual permissions are common indicators of malicious activity</td>
+        </tr>
+        <tr>
+          <td class="cmd">ssh user@ip</td>
+          <td class="desc">Securely connects to a remote machine</td>
+          <td class="soc">Standard remote access — SOC analysts regularly access remote systems during investigations</td>
+        </tr>
+        <tr>
+          <td class="cmd">cat / less</td>
+          <td class="desc">Reads file contents</td>
+          <td class="soc">Log analysis starts here — reading system logs, config files, and suspicious files</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout">
+      <div class="callout-label">Worth noting — whoami</div>
+      <p>
+        <code>whoami</code> seems trivial but has real depth. Beyond identifying your own
+        session, it matters in attacker simulation — when a threat actor gains access to
+        a system, one of their first commands is <code>whoami</code> to determine their
+        privilege level. Root or admin access changes everything about what they can do
+        next. As a defender, understanding this shapes how you look for post-exploitation
+        activity in logs.
+      </p>
+    </div>
+
+    <h2>What I Found Difficult</h2>
+    <p>
+      Navigation is still the hardest part. I understand the logic — <code>pwd</code>
+      shows where I am, <code>cd</code> moves me around, <code>ls</code> shows what's
+      there — but doing it fluidly without hesitation takes practice I haven't fully
+      built yet. In a Windows GUI, the file system is visual and spatial. In a Linux
+      terminal, it's entirely mental, and building that internal map takes time.
+    </p>
+    <p>
+      But it's fine. I  looked it up, and it is a known learning curve and not a concern — it's purely a matter of
+      repetition. The more time spent in the terminal, the more automatic it becomes.
+    </p>
+
+    <h2>Key Takeaways</h2>
+    <div class="takeaways">
+      <ul>
+        <li>CLI fluency is a foundational skill for SOC work — speed and precision matter in incident response</li>
+        <li>Basic commands like <code>whoami</code> and <code>ipconfig</code> carry real security significance beyond their surface function</li>
+        <li>SSH is the standard for secure remote access — understanding it as both a tool and an attack surface is important</li>
+        <li>Hidden files, file permissions, and directory structure are all relevant to identifying compromise on a Linux system</li>
+        <li>Navigation fluency comes with repetition — the logic is sound, the muscle memory takes time</li>
+      </ul>
+    </div>
+
+    <h2>What's Next</h2>
+    <p>
+      The next writeup covers ports and protocols — building on networking fundamentals
+      and why certain ports are high-value targets for attackers. After that, moving into
+      Nmap and active network reconnaissance as part of the Cybersecurity 101 path.
+    </p>
+
+  </div>
+
+  <footer>
+    <div class="footer-text">gerry-lees.github.io — cybersecurity portfolio</div>
+  </footer>
+
+</div>
+</body>
+</html>

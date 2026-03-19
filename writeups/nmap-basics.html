@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Nmap — Gerry | Cybersecurity Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #0a0e13;
+      --surface:  #111820;
+      --border:   #1e2d3d;
+      --accent:   #00d4ff;
+      --accent2:  #00ff9d;
+      --text:     #c9d8e8;
+      --muted:    #4a6072;
+      --mono:     'Share Tech Mono', monospace;
+      --sans:     'DM Sans', sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-weight: 300;
+      min-height: 100vh;
+      line-height: 1.8;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    nav {
+      padding: 2rem 0 0;
+    }
+
+    nav a {
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    nav a:hover { color: var(--accent); }
+    nav a::before { content: '← '; }
+
+    header {
+      padding: 3rem 0 2.5rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 3rem;
+    }
+
+    .meta {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-bottom: 1rem;
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .meta .tag { color: var(--accent2); }
+
+    h1 {
+      font-family: var(--mono);
+      font-size: clamp(1.4rem, 4vw, 2rem);
+      color: #fff;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+
+    .subtitle {
+      font-size: 1.05rem;
+      color: var(--muted);
+      max-width: 580px;
+    }
+
+    .content h2 {
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      color: var(--accent);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin: 2.5rem 0 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .content h2::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .content p {
+      font-size: 1rem;
+      color: var(--text);
+      margin-bottom: 1.2rem;
+    }
+
+    .code-block {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      padding: 1.2rem 1.4rem;
+      margin: 1.5rem 0;
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      overflow-x: auto;
+    }
+
+    .code-block .line {
+      display: block;
+      color: var(--text);
+      margin-bottom: 0.3rem;
+    }
+
+    .code-block .line:last-child { margin-bottom: 0; }
+    .code-block .prompt { color: var(--accent2); }
+    .code-block .comment { color: var(--muted); }
+    .code-block .output { color: var(--muted); padding-left: 1rem; }
+    .code-block .highlight { color: var(--accent); }
+
+    .callout {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent2);
+      padding: 1.2rem 1.4rem;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+    }
+
+    .callout-label {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--accent2);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    .cmd-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+    }
+
+    .cmd-table th {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      text-align: left;
+      padding: 0.6rem 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .cmd-table td {
+      padding: 0.7rem 1rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+
+    .cmd-table tr:last-child td { border-bottom: none; }
+    .cmd-table .cmd { font-family: var(--mono); font-size: 0.82rem; color: var(--accent2); white-space: nowrap; }
+    .cmd-table .desc { color: var(--text); }
+    .cmd-table .soc { color: var(--muted); font-size: 0.85rem; }
+
+    .takeaways {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 1.4rem 1.6rem;
+      margin: 2rem 0;
+    }
+
+    .takeaways ul { list-style: none; padding: 0; }
+
+    .takeaways ul li {
+      font-size: 0.95rem;
+      color: var(--text);
+      padding: 0.4rem 0;
+      padding-left: 1.2rem;
+      position: relative;
+    }
+
+    .takeaways ul li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+      font-family: var(--mono);
+    }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem 0;
+      margin-top: 4rem;
+    }
+
+    .footer-text {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <nav><a href="/writeups/">writeups</a></nav>
+
+  <header>
+    <div class="meta">
+      <span>2026</span>
+      <span class="tag">#nmap</span>
+      <span class="tag">#networking</span>
+      <span class="tag">#reconnaissance</span>
+      <span>TryHackMe — Cybersecurity 101</span>
+    </div>
+    <h1>Nmap — Scanning, Open Ports,<br/>and What They Reveal</h1>
+    <p class="subtitle">
+      My first real network reconnaissance — finding open ports, identifying a hidden
+      service, and understanding why this matters from a defender's perspective.
+    </p>
+  </header>
+
+  <div class="content">
+
+    <h2>What is Nmap</h2>
+    <p>
+      Nmap (Network Mapper) is one of the most fundamental tools in both offensive and
+      defensive security. At its core it does one thing — scans a network or host to
+      discover what ports are open and what services are running on them. For a SOC
+      analyst, understanding Nmap matters in two directions: using it to map your own
+      environment, and recognising when an attacker is using it against you.
+    </p>
+
+    <h2>The Objective</h2>
+    <p>
+      The goal of this exercise was to identify the name and version of a web server
+      running on a target machine. No other information was given. This mirrors a
+      real-world scenario where you need to understand what's actually running on a
+      system — not just what should be running on it.
+    </p>
+
+    <h2>Step 1 — General Scan</h2>
+    <p>
+      The first step was a general TCP connect scan to find all open ports on the target.
+      A <code>-sT</code> scan completes the full TCP three-way handshake — more detectable
+      than a SYN scan, but reliable and usable without elevated privileges.
+    </p>
+
+    <div class="code-block">
+      <span class="line"><span class="prompt">$</span> nmap -sT &lt;target-ip&gt;</span>
+      <span class="line"> </span>
+      <span class="line"><span class="comment"># Key result:</span></span>
+      <span class="line output">PORT     STATE SERVICE</span>
+      <span class="line output"><span class="highlight">8008/tcp open  http</span></span>
+    </div>
+
+    <p>
+      Port 8008 came back open and running HTTP. This is immediately interesting —
+      port 80 is the standard port for HTTP. Something running HTTP on port 8008 is
+      either a secondary service, a development server, or potentially something that
+      someone doesn't want easily found.
+    </p>
+
+    <div class="callout">
+      <div class="callout-label">SOC note — non-standard ports</div>
+      <p>
+        A service running on a non-standard port is worth investigating. It could mean
+        a legitimate secondary service — or it could indicate a threat actor running
+        something through a compromised machine and deliberately avoiding port 80 to
+        stay under the radar. Port obfuscation is a real technique. A SOC analyst seeing
+        unexpected HTTP traffic on an unusual port should treat it as suspicious until
+        proven otherwise.
+      </p>
+    </div>
+
+    <h2>Step 2 — Version Detection on Port 8008</h2>
+    <p>
+      A general scan tells you a port is open. It doesn't tell you what's actually
+      running on it. For that, the <code>-sV</code> flag instructs Nmap to probe the
+      service and return its name and version. The <code>-Pn</code> flag was also needed
+      here — the target was configured to appear offline to ping requests, so without
+      <code>-Pn</code> Nmap would have skipped it entirely.
+    </p>
+
+    <div class="code-block">
+      <span class="line"><span class="prompt">$</span> nmap &lt;target-ip&gt; -Pn -sV -p 8008</span>
+      <span class="line"> </span>
+      <span class="line"><span class="comment"># Result:</span></span>
+      <span class="line output">PORT     STATE SERVICE VERSION</span>
+      <span class="line output"><span class="highlight">8008/tcp open  http    lighttpd 1.4.74</span></span>
+    </div>
+
+    <p>
+      That's the answer — <strong>lighttpd 1.4.74</strong>. A lightweight open source
+      web server. Version detection matters because specific versions carry specific
+      known vulnerabilities. If you know a target is running lighttpd 1.4.74, you can
+      check immediately whether that version has any published CVEs.
+    </p>
+
+    <h2>Scan Types — and Why It Matters</h2>
+
+    <table class="cmd-table">
+      <thead>
+        <tr>
+          <th>Flag</th>
+          <th>Scan type</th>
+          <th>What to know</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="cmd">-sT</td>
+          <td class="desc">TCP Connect scan</td>
+          <td class="soc">Full three-way handshake. Reliable, but leaves logs — more detectable</td>
+        </tr>
+        <tr>
+          <td class="cmd">-sS</td>
+          <td class="desc">SYN scan (stealth)</td>
+          <td class="soc">Sends SYN, doesn't complete handshake. Faster and quieter — requires root privileges</td>
+        </tr>
+        <tr>
+          <td class="cmd">-sV</td>
+          <td class="desc">Version detection</td>
+          <td class="soc">Probes open ports to identify service name and version — critical for vulnerability assessment</td>
+        </tr>
+        <tr>
+          <td class="cmd">-Pn</td>
+          <td class="desc">Skip host discovery</td>
+          <td class="soc">Treats host as online even if it doesn't respond to ping — needed when ICMP is blocked</td>
+        </tr>
+        <tr>
+          <td class="cmd">-p</td>
+          <td class="desc">Specify port(s)</td>
+          <td class="soc">Targets a specific port rather than scanning all — useful when you already know what to look at</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout">
+      <div class="callout-label">SOC note — scan type as an indicator</div>
+      <p>
+        The difference between <code>-sT</code> and <code>-sS</code> matters from a
+        defensive perspective too. A SYN scan is specifically designed to avoid detection
+        — if you're monitoring network traffic and see incomplete TCP handshakes across
+        multiple ports in quick succession, that's a strong indicator of reconnaissance
+        activity. Knowing how attackers scan helps you recognise when you're being scanned.
+      </p>
+    </div>
+
+    <h2>Dangerous Open Ports — A Defender's Perspective</h2>
+    <p>
+      Not all open ports are equal. Some represent services that should simply never be
+      running on a modern system. The clearest example is Telnet on port 23 — a protocol
+      that sends everything including usernames and passwords in plain text with zero
+      encryption. SSH replaced Telnet specifically because of this. Finding port 23 open
+      on a system during a scan is an immediate red flag.
+    </p>
+    <p>
+      This is why port awareness is foundational for SOC work. A list of open ports on
+      a machine tells you its attack surface. Ports that shouldn't be open, services
+      running on non-standard ports, and old unpatched versions are all things that
+      show up in Nmap output — and all things an attacker looks for first.
+    </p>
+
+    <h2>Key Takeaways</h2>
+    <div class="takeaways">
+      <ul>
+        <li>Nmap is foundational — understanding it from both offensive and defensive angles is essential for SOC work</li>
+        <li>A general scan finds open ports — version detection tells you what's actually running and whether it's vulnerable</li>
+        <li><code>-Pn</code> is necessary when a host is configured to appear offline — don't assume no response means no host</li>
+        <li>Non-standard ports are worth investigating — legitimate services and threat actors both use them, for different reasons</li>
+        <li>Scan type reveals intent — incomplete TCP handshakes across multiple ports is a classic reconnaissance signature</li>
+        <li>Telnet on port 23 should never be open — plain text credentials are an immediate critical risk</li>
+      </ul>
+    </div>
+
+    <h2>What's Next</h2>
+    <p>
+      Next writeup covers ports and protocols in depth — key port numbers, what they do,
+      and why certain ports are high-value targets for attackers. Building the mental
+      map of the port landscape that every SOC analyst needs.
+    </p>
+
+  </div>
+
+  <footer>
+    <div class="footer-text">gerry-lees.github.io — cybersecurity portfolio</div>
+  </footer>
+
+</div>
+</body>
+</html>

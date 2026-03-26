@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hydra — Gerry | Cybersecurity Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #0a0e13;
+      --surface:  #111820;
+      --border:   #1e2d3d;
+      --accent:   #00d4ff;
+      --accent2:  #00ff9d;
+      --text:     #c9d8e8;
+      --muted:    #4a6072;
+      --mono:     'Share Tech Mono', monospace;
+      --sans:     'DM Sans', sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-weight: 300;
+      min-height: 100vh;
+      line-height: 1.8;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    nav { padding: 2rem 0 0; }
+
+    nav a {
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    nav a:hover { color: var(--accent); }
+    nav a::before { content: '← '; }
+
+    header {
+      padding: 3rem 0 2.5rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 3rem;
+    }
+
+    .meta {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-bottom: 1rem;
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .meta .tag { color: var(--accent2); }
+
+    h1 {
+      font-family: var(--mono);
+      font-size: clamp(1.4rem, 4vw, 2rem);
+      color: #fff;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+
+    .subtitle {
+      font-size: 1.05rem;
+      color: var(--muted);
+      max-width: 580px;
+    }
+
+    .content h2 {
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      color: var(--accent);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin: 2.5rem 0 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .content h2::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .content p {
+      font-size: 1rem;
+      color: var(--text);
+      margin-bottom: 1.2rem;
+    }
+
+    .code-block {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      padding: 1.2rem 1.4rem;
+      margin: 1.5rem 0;
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      overflow-x: auto;
+    }
+
+    .code-block .line { display: block; color: var(--text); margin-bottom: 0.3rem; }
+    .code-block .line:last-child { margin-bottom: 0; }
+    .code-block .prompt { color: var(--accent2); }
+    .code-block .comment { color: var(--muted); }
+    .code-block .highlight { color: var(--accent); }
+
+    .callout {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent2);
+      padding: 1.2rem 1.4rem;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+    }
+
+    .callout-label {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--accent2);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    .cmd-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+    }
+
+    .cmd-table th {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      text-align: left;
+      padding: 0.6rem 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .cmd-table td {
+      padding: 0.7rem 1rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+
+    .cmd-table tr:last-child td { border-bottom: none; }
+    .cmd-table .cmd { font-family: var(--mono); font-size: 0.82rem; color: var(--accent2); white-space: nowrap; }
+    .cmd-table .desc { color: var(--text); }
+    .cmd-table .note { color: var(--muted); font-size: 0.85rem; }
+
+    .takeaways {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 1.4rem 1.6rem;
+      margin: 2rem 0;
+    }
+
+    .takeaways ul { list-style: none; padding: 0; }
+
+    .takeaways ul li {
+      font-size: 0.95rem;
+      color: var(--text);
+      padding: 0.4rem 0;
+      padding-left: 1.2rem;
+      position: relative;
+    }
+
+    .takeaways ul li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+      font-family: var(--mono);
+    }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem 0;
+      margin-top: 4rem;
+    }
+
+    .footer-text {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <nav><a href="/writeups/">writeups</a></nav>
+
+  <header>
+    <div class="meta">
+      <span>2026</span>
+      <span class="tag">#hydra</span>
+      <span class="tag">#brute-force</span>
+      <span class="tag">#blue-team</span>
+      <span>TryHackMe — Cybersecurity 101</span>
+    </div>
+    <h1>Hydra — Brute Force Attacks<br/>on Web Forms and SSH</h1>
+    <p class="subtitle">
+      Using Hydra to brute force a web login and an SSH service — and what
+      this looks like from a defender's perspective.
+    </p>
+  </header>
+
+  <div class="content">
+
+    <h2>What is Hydra</h2>
+    <p>
+      Hydra is a brute force password attack tool. It automates the process of trying
+      large numbers of passwords against a login service — something that would be
+      completely impractical to do manually. By the time you've typed your second
+      password attempt by hand, Hydra has already tried hundreds.
+    </p>
+    <p>
+      What makes it effective is threading — running multiple attempts in parallel.
+      By default Hydra uses 16 threads, meaning 16 password attempts are being made
+      simultaneously. Against a wordlist like rockyou.txt with around 14 million
+      entries, this speed matters enormously.
+    </p>
+
+    <h2>The Objective</h2>
+    <p>
+      The goal of this exercise was to brute force access to a user account called
+      molly — first on a web login page, then via SSH — using the rockyou.txt wordlist.
+      After gaining access to each, the task was to retrieve a piece of data from
+      the target.
+    </p>
+
+    <h2>Part 1 — Brute Forcing a Web Login</h2>
+    <p>
+      Before running Hydra against a web form, you need to know exactly how that form
+      submits data. Different sites use different field names — one might use
+      <code>username=</code>, another might use <code>user=</code> or <code>usr=</code>.
+      You also need to confirm whether the form submits over HTTP or HTTPS, as these
+      require different Hydra modules.
+    </p>
+    <p>
+      To find this, I attempted a login with random credentials and used the browser's
+      dev tools to inspect the POST request. This showed the exact field names the form
+      used and confirmed it was HTTP — giving everything needed to construct the
+      Hydra command.
+    </p>
+
+    <div class="code-block">
+      <span class="line"><span class="comment"># Brute force a web login form</span></span>
+      <span class="line"><span class="prompt">$</span> hydra -l molly -P /usr/share/wordlists/rockyou.txt 10.10.142.34 \</span>
+      <span class="line">  http-post-form "/login:username=^USER^&password=^PASS^:F=incorrect" -V</span>
+    </div>
+
+    <table class="cmd-table">
+      <thead>
+        <tr>
+          <th>Flag / value</th>
+          <th>What it does</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="cmd">-l molly</td>
+          <td class="desc">Sets a single known username to target</td>
+        </tr>
+        <tr>
+          <td class="cmd">-P rockyou.txt</td>
+          <td class="desc">Uses rockyou.txt as the password wordlist</td>
+        </tr>
+        <tr>
+          <td class="cmd">http-post-form</td>
+          <td class="desc">Tells Hydra this is an HTTP POST login form</td>
+        </tr>
+        <tr>
+          <td class="cmd">/login:username=^USER^&password=^PASS^</td>
+          <td class="desc">The login path and exact field names from the POST request — ^USER^ and ^PASS^ are replaced by Hydra on each attempt</td>
+        </tr>
+        <tr>
+          <td class="cmd">F=incorrect</td>
+          <td class="desc">The failure string — text that appears on a failed login. Hydra uses this to detect when an attempt has failed.</td>
+        </tr>
+        <tr>
+          <td class="cmd">-V</td>
+          <td class="desc">Verbose — shows each attempt as it happens, including which password was tried and whether it failed</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>Part 2 — Brute Forcing SSH</h2>
+    <p>
+      The second part used the same wordlist to find molly's SSH password. SSH brute
+      forcing follows a simpler syntax since there's no form structure to map out.
+      The <code>-t 4</code> flag was used to reduce the thread count from the default
+      16 down to 4, because the target was an older machine that would become
+      overloaded and fail with too many simultaneous connection attempts.
+    </p>
+
+    <div class="callout">
+      <div class="callout-label">Note on thread count</div>
+      <p>
+        Reducing threads isn't only about old hardware. Running Hydra at full speed
+        against a real target generates a very obvious pattern in logs — a flood of
+        failed login attempts in rapid succession. A lower thread count is slower but
+        quieter, and less likely to trigger security alerts or lockouts on the target.
+      </p>
+    </div>
+
+    <div class="code-block">
+      <span class="line"><span class="comment"># Brute force SSH</span></span>
+      <span class="line"><span class="prompt">$</span> hydra -l molly -P /usr/share/wordlists/rockyou.txt 10.10.142.34 -t 4 ssh</span>
+      <span class="line"> </span>
+      <span class="line"><span class="comment"># Once the password is found, log in normally</span></span>
+      <span class="line"><span class="prompt">$</span> ssh molly@10.10.142.34</span>
+    </div>
+
+    <h2>Defender Perspective — What This Looks Like in Logs</h2>
+    <p>
+      A Hydra attack against a login service is not subtle. In server logs it appears
+      as a large volume of failed login attempts from the same IP address in rapid
+      succession. Against a web form, hundreds of POST requests to the login endpoint
+      within seconds. Against SSH, a flood of failed authentication attempts on port 22.
+    </p>
+    <p>
+      The standard defence is account lockout policy — after a set number of failed
+      attempts within a time window, the account is locked or the IP is rate limited.
+      For example: 5 failed attempts triggers a 5 minute wait, another 5 triggers 10
+      minutes, then a full account lock. This doesn't stop brute force attempts from
+      happening, but it makes them take so long that a 14 million entry wordlist becomes
+      completely impractical.
+    </p>
+
+    <div class="callout">
+      <div class="callout-label">SOC note</div>
+      <p>
+        Brute force attempts are one of the most common and easily detectable attack
+        patterns in logs. A SOC analyst seeing repeated failed logins against the same
+        account or service — especially from a single external IP — should treat it as
+        an active brute force attempt and respond accordingly.
+      </p>
+    </div>
+
+    <h2>Key Takeaways</h2>
+    <div class="takeaways">
+      <ul>
+        <li>Hydra automates brute force attacks using threads — massively faster than any manual attempt</li>
+        <li>Before attacking a web form, inspect the POST request in dev tools to find the exact field names and confirm HTTP vs HTTPS</li>
+        <li>The failure string (<code>F=</code>) tells Hydra what a failed login looks like — getting this right is essential</li>
+        <li>Thread count affects both speed and detectability — fewer threads is slower but quieter</li>
+        <li>Brute force attacks produce an obvious log pattern — high volumes of failed attempts in rapid succession</li>
+        <li>Account lockout policies are the primary defence — they make large wordlist attacks impractical by introducing time delays</li>
+      </ul>
+    </div>
+
+    <h2>What's Next</h2>
+    <p>
+      I've been working on the fundamentals of the Burp Suite - but want to do some additional study before a writeup.
+    </p>
+
+  </div>
+
+  <footer>
+    <div class="footer-text">gerry-lees.github.io — cybersecurity portfolio</div>
+  </footer>
+
+</div>
+</body>
+</html>

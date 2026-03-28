@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Shells — Gerry | Cybersecurity Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #0a0e13;
+      --surface:  #111820;
+      --border:   #1e2d3d;
+      --accent:   #00d4ff;
+      --accent2:  #00ff9d;
+      --text:     #c9d8e8;
+      --muted:    #4a6072;
+      --mono:     'Share Tech Mono', monospace;
+      --sans:     'DM Sans', sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-weight: 300;
+      min-height: 100vh;
+      line-height: 1.8;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    nav { padding: 2rem 0 0; }
+
+    nav a {
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    nav a:hover { color: var(--accent); }
+    nav a::before { content: '← '; }
+
+    header {
+      padding: 3rem 0 2.5rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 3rem;
+    }
+
+    .meta {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-bottom: 1rem;
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .meta .tag { color: var(--accent2); }
+
+    h1 {
+      font-family: var(--mono);
+      font-size: clamp(1.4rem, 4vw, 2rem);
+      color: #fff;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+
+    .subtitle {
+      font-size: 1.05rem;
+      color: var(--muted);
+      max-width: 580px;
+    }
+
+    .content h2 {
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      color: var(--accent);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin: 2.5rem 0 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .content h2::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .content p {
+      font-size: 1rem;
+      color: var(--text);
+      margin-bottom: 1.2rem;
+    }
+
+    .code-block {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      padding: 1.2rem 1.4rem;
+      margin: 1.5rem 0;
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      overflow-x: auto;
+    }
+
+    .code-block .line { display: block; color: var(--text); margin-bottom: 0.3rem; }
+    .code-block .line:last-child { margin-bottom: 0; }
+    .code-block .prompt { color: var(--accent2); }
+    .code-block .comment { color: var(--muted); }
+    .code-block .highlight { color: var(--accent); }
+
+    .callout {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent2);
+      padding: 1.2rem 1.4rem;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+    }
+
+    .callout.red { border-left-color: #ff6b6b; }
+
+    .callout-label {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--accent2);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    .callout.red .callout-label { color: #ff6b6b; }
+
+    .comparison {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      margin: 1.5rem 0;
+    }
+
+    .comparison-cell {
+      background: var(--surface);
+      padding: 1.2rem 1.4rem;
+    }
+
+    .comparison-cell h3 {
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .comparison-cell p {
+      font-size: 0.9rem;
+      margin-bottom: 0.6rem;
+    }
+
+    .comparison-cell p:last-child { margin-bottom: 0; }
+
+    .takeaways {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 1.4rem 1.6rem;
+      margin: 2rem 0;
+    }
+
+    .takeaways ul { list-style: none; padding: 0; }
+
+    .takeaways ul li {
+      font-size: 0.95rem;
+      color: var(--text);
+      padding: 0.4rem 0;
+      padding-left: 1.2rem;
+      position: relative;
+    }
+
+    .takeaways ul li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+      font-family: var(--mono);
+    }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem 0;
+      margin-top: 4rem;
+    }
+
+    .footer-text {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <nav><a href="/writeups/">writeups</a></nav>
+
+  <header>
+    <div class="meta">
+      <span>2026</span>
+      <span class="tag">#shells</span>
+      <span class="tag">#web-shell</span>
+      <span class="tag">#blue-team</span>
+      <span>TryHackMe — Cybersecurity 101</span>
+    </div>
+    <h1>Shells —<br/>Reverse, Bind, and Web Shells</h1>
+    <p class="subtitle">
+      How shells work at a technical level, the difference between shell types,
+      a hands-on web shell exercise, and what defenders need to know.
+    </p>
+  </header>
+
+  <div class="content">
+
+    <h2>What is a Shell</h2>
+    <p>
+      In an attack context, a shell is a connection between two machines that allows
+      an attacker to execute commands on a target remotely. Getting a shell on a target
+      is often the goal after initial access — it's what turns a vulnerability into
+      actual control.
+    </p>
+    <p>
+      There are different types of shells, and understanding the difference matters
+      both for offensive techniques and for knowing what to look for as a defender.
+    </p>
+
+    <h2>Reverse Shell vs Bind Shell</h2>
+
+    <div class="comparison">
+      <div class="comparison-cell">
+        <h3>Reverse Shell</h3>
+        <p>The victim machine initiates the connection back to the attacker.</p>
+        <p>Because the connection comes from inside the target network outward, firewalls and security measures are less likely to block it — outbound traffic is typically trusted more than inbound.</p>
+        <p>This is the most commonly used shell type for exactly this reason.</p>
+      </div>
+      <div class="comparison-cell">
+        <h3>Bind Shell</h3>
+        <p>The victim machine opens a port and listens. The attacker connects inward to it.</p>
+        <p>Because this requires an inbound connection from an external IP, it is more easily detected and blocked by firewalls and security controls.</p>
+        <p>Less commonly used as a result.</p>
+      </div>
+    </div>
+
+    <h2>How a Reverse Shell Works</h2>
+    <p>
+      A reverse shell connects two machines together using a pipe with FIFO — First
+      In, First Out. Whatever goes into one end of the pipe comes out the other, in order.
+      The shell runs as a continuous loop.
+    </p>
+    <p>
+      Understanding stdin, stdout, and stderr is key to understanding how this works:
+    </p>
+    <p>
+      <strong>stdin (0)</strong> — standard input. How input enters a system — typically
+      a keyboard. In a shell, this is redirected so that input comes from the attacker's
+      machine rather than a local keyboard.
+    </p>
+    <p>
+      <strong>stdout (1)</strong> — standard output. How output is displayed — typically
+      a monitor or terminal. In a shell, this is redirected back to the attacker so they
+      see the results of their commands.
+    </p>
+    <p>
+      <strong>stderr (2)</strong> — standard error. How errors are displayed. Also
+      redirected back to the attacker. This matters — if stderr wasn't redirected,
+      error messages would appear on the victim's terminal, potentially alerting them
+      that something was running.
+    </p>
+
+    <div class="code-block">
+      <span class="line"><span class="comment"># >& sends both stdout and stderr to the same location</span></span>
+      <span class="line"><span class="comment"># Without this, errors might appear on the victim's screen</span></span>
+      <span class="line">command >& /location</span>
+    </div>
+
+    <p>
+      The loop works like this: the attacker types a command, it is read by the victim
+      machine and executed, the results (stdout and stderr) are sent back through the
+      pipe to the attacker, who then types the next command. This continues
+      indefinitely, giving the attacker an interactive session on the target.
+    </p>
+    <p>
+      The <code>-i</code> flag makes the shell interactive, and <code>mkfifo</code>
+      creates the named pipe — typically in a temporary directory and called
+      <code>f</code> — that the whole loop runs through.
+    </p>
+
+    <h2>Web Shells</h2>
+    <p>
+      A web shell is a script uploaded to a web server that allows commands to be
+      executed through a browser. Rather than a direct connection between two machines,
+      the attacker interacts with the target through the web server itself.
+    </p>
+    <p>
+      The exercise involved a site with a CV upload page. The page accepted file uploads
+      without properly checking what type of file was being uploaded — a security failure
+      known as insufficient input sanitisation. A properly secured upload should only
+      accept the file types it actually needs, such as PDF files for a CV page, and
+      reject anything else.
+    </p>
+    <p>
+      PHP is commonly used for web shells because it is executed by web servers — when
+      a PHP file is served, the server runs the code inside it rather than just
+      displaying it as text. The <code>&lt;?php ?&gt;</code> tags are what tell the
+      server to execute the contents as PHP code. Without those tags, it's just a file.
+      With them, the server runs whatever is inside.
+    </p>
+
+    <div class="code-block">
+      <span class="line"><span class="comment"># Example PHP web shell structure</span></span>
+      <span class="line">&lt;?php system($_GET['cmd']); ?&gt;</span>
+      <span class="line"> </span>
+      <span class="line"><span class="comment"># After uploading, navigate to the file in the browser</span></span>
+      <span class="line"><span class="comment"># Then use it to run commands — e.g. cat flag.txt</span></span>
+    </div>
+
+    <p>
+      After uploading the PHP script and navigating to the uploads directory, commands
+      could be run directly on the server. In this case, <code>cat flag.txt</code>
+      with the provided file path returned the required data.
+    </p>
+
+    <div class="callout red">
+      <div class="callout-label">Defender perspective — web shells</div>
+      <p>
+        The defence against web shell uploads is input sanitisation — restricting
+        uploads to only the file types the application actually needs. A CV page has
+        no reason to accept PHP files. Validating file type on both the client and
+        server side, and storing uploads outside the web root where they cannot be
+        directly executed, are standard mitigations.
+      </p>
+    </div>
+
+    <h2>Key Takeaways</h2>
+    <div class="takeaways">
+      <ul>
+        <li>Reverse shells are preferred over bind shells because the victim initiates the connection outward, bypassing most firewall rules</li>
+        <li>stdin, stdout, and stderr must all be redirected correctly in a shell — leaving stderr unredirected could alert the victim</li>
+        <li>A reverse shell runs as a loop via a named pipe — commands go in one end, results come out the other</li>
+        <li>Web shells work because PHP is executed by web servers — the <code>&lt;?php ?&gt;</code> tags trigger execution rather than display</li>
+        <li>Web shell uploads are possible when file upload pages don't properly validate what type of file is being submitted</li>
+        <li>Input sanitisation — only accepting the file types actually needed — is the primary defence against web shell uploads</li>
+      </ul>
+    </div>
+
+    <h2>What's Next</h2>
+    <p>
+      Next up is learning about SQLMap.
+    </p>
+
+  </div>
+
+  <footer>
+    <div class="footer-text">gerry-lees.github.io — cybersecurity portfolio</div>
+  </footer>
+
+</div>
+</body>
+</html>

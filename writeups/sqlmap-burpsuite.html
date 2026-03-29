@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SQLmap & Burp Suite — Gerry | Cybersecurity Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #0a0e13;
+      --surface:  #111820;
+      --border:   #1e2d3d;
+      --accent:   #00d4ff;
+      --accent2:  #00ff9d;
+      --text:     #c9d8e8;
+      --muted:    #4a6072;
+      --mono:     'Share Tech Mono', monospace;
+      --sans:     'DM Sans', sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-weight: 300;
+      min-height: 100vh;
+      line-height: 1.8;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    nav { padding: 2rem 0 0; }
+
+    nav a {
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    nav a:hover { color: var(--accent); }
+    nav a::before { content: '← '; }
+
+    header {
+      padding: 3rem 0 2.5rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 3rem;
+    }
+
+    .meta {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-bottom: 1rem;
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .meta .tag { color: var(--accent2); }
+
+    h1 {
+      font-family: var(--mono);
+      font-size: clamp(1.4rem, 4vw, 2rem);
+      color: #fff;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+
+    .subtitle {
+      font-size: 1.05rem;
+      color: var(--muted);
+      max-width: 580px;
+    }
+
+    .content h2 {
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      color: var(--accent);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin: 2.5rem 0 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .content h2::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .content p {
+      font-size: 1rem;
+      color: var(--text);
+      margin-bottom: 1.2rem;
+    }
+
+    .code-block {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      padding: 1.2rem 1.4rem;
+      margin: 1.5rem 0;
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      overflow-x: auto;
+    }
+
+    .code-block .line { display: block; color: var(--text); margin-bottom: 0.3rem; }
+    .code-block .line:last-child { margin-bottom: 0; }
+    .code-block .prompt { color: var(--accent2); }
+    .code-block .comment { color: var(--muted); }
+    .code-block .highlight { color: var(--accent); }
+
+    .callout {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent2);
+      padding: 1.2rem 1.4rem;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+    }
+
+    .callout.red { border-left-color: #ff6b6b; }
+
+    .callout-label {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--accent2);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    .callout.red .callout-label { color: #ff6b6b; }
+
+    .attack-flow {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 1.4rem 1.6rem;
+      margin: 1.5rem 0;
+    }
+
+    .flow-step {
+      display: flex;
+      gap: 1rem;
+      padding: 0.6rem 0;
+      border-bottom: 1px solid var(--border);
+      align-items: flex-start;
+    }
+
+    .flow-step:last-child { border-bottom: none; }
+
+    .flow-num {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--accent);
+      min-width: 1.5rem;
+      padding-top: 0.15rem;
+    }
+
+    .flow-text {
+      font-size: 0.95rem;
+      color: var(--text);
+    }
+
+    .flow-text code {
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      color: var(--accent2);
+    }
+
+    .cmd-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+    }
+
+    .cmd-table th {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      text-align: left;
+      padding: 0.6rem 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .cmd-table td {
+      padding: 0.7rem 1rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+
+    .cmd-table tr:last-child td { border-bottom: none; }
+    .cmd-table .cmd { font-family: var(--mono); font-size: 0.82rem; color: var(--accent2); white-space: nowrap; }
+    .cmd-table .desc { color: var(--text); }
+    .cmd-table .note { color: var(--muted); font-size: 0.85rem; }
+
+    .takeaways {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 1.4rem 1.6rem;
+      margin: 2rem 0;
+    }
+
+    .takeaways ul { list-style: none; padding: 0; }
+
+    .takeaways ul li {
+      font-size: 0.95rem;
+      color: var(--text);
+      padding: 0.4rem 0;
+      padding-left: 1.2rem;
+      position: relative;
+    }
+
+    .takeaways ul li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+      font-family: var(--mono);
+    }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem 0;
+      margin-top: 4rem;
+    }
+
+    .footer-text {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <nav><a href="/writeups/">writeups</a></nav>
+
+  <header>
+    <div class="meta">
+      <span>2026</span>
+      <span class="tag">#sqlmap</span>
+      <span class="tag">#burpsuite</span>
+      <span class="tag">#sql-injection</span>
+      <span class="tag">#red-team</span>
+      <span>TryHackMe — Cybersecurity 101</span>
+    </div>
+    <h1>SQLmap & Burp Suite —<br/>Exploiting SQL Injection to Dump a Database</h1>
+    <p class="subtitle">
+      Using Burp Suite to capture a session cookie, then SQLmap to find and exploit
+      a SQL injection vulnerability — from initial access to credential dump.
+    </p>
+  </header>
+
+  <div class="content">
+
+    <h2>What is SQL Injection</h2>
+    <p>
+      SQL injection is a technique where malicious SQL code is inserted into an input
+      field to manipulate the database into returning information it shouldn't. Rather
+      than the input being treated as data, the database interprets it as a command.
+      The result can range from leaking usernames and passwords to complete database
+      access.
+    </p>
+    <p>
+      SQLmap automates this process — testing parameters for injection vulnerabilities
+      and, once found, exploiting them to extract data.
+    </p>
+
+    <h2>Step 1 — Capturing the Session Cookie with Burp Suite</h2>
+    <p>
+      The target page required authentication to access the vulnerable parameter.
+      Running SQLmap directly against the URL without a valid session would just
+      hit the login page rather than the actual application — the server has no reason
+      to return anything useful to an unauthenticated request.
+    </p>
+    <p>
+      To solve this, Burp Suite was used as a proxy to intercept the login request.
+      With intercept turned on, a login attempt was made with the target credentials.
+      Burp Suite captured the request mid-flight, exposing the session cookie — proof
+      to the server that the request is coming from an authenticated user.
+    </p>
+    <p>
+      That cookie was then passed directly into the SQLmap command, allowing it to
+      make authenticated requests against the vulnerable parameter.
+    </p>
+
+    <div class="callout">
+      <div class="callout-label">Why this matters</div>
+      <p>
+        Many SQL injection vulnerabilities sit behind authentication. Knowing how to
+        use Burp Suite to capture session tokens and pass them to other tools is a
+        practical skill that goes beyond what most guided labs teach — it reflects
+        how real assessments are conducted.
+      </p>
+    </div>
+
+    <h2>Step 2 — Finding the Vulnerability</h2>
+
+    <div class="code-block">
+      <span class="line"><span class="comment"># Run SQLmap against the target with the captured cookie</span></span>
+      <span class="line"><span class="prompt">$</span> sqlmap -u "http://&lt;target-ip&gt;/vulnerabilities/sqli/?id=test" \</span>
+      <span class="line">  --cookie="&lt;captured session cookie&gt;"</span>
+      <span class="line"> </span>
+      <span class="line"><span class="comment"># SQLmap tests the parameter and confirms it is injectable</span></span>
+    </div>
+
+    <p>
+      SQLmap tested the <code>id</code> parameter and confirmed it was vulnerable to
+      SQL injection. From here, the database could be enumerated systematically.
+    </p>
+
+    <h2>Step 3 — Enumerating the Database</h2>
+    <p>
+      Database enumeration follows a logical order — you need to know what databases
+      exist before you can look inside one, and what tables exist before you can
+      query a specific table.
+    </p>
+
+    <div class="attack-flow">
+      <div class="flow-step">
+        <span class="flow-num">01</span>
+        <span class="flow-text">
+          <code>--dbs</code> — lists all databases available on the server. This gives
+          the full picture of what's there before narrowing focus.
+        </span>
+      </div>
+      <div class="flow-step">
+        <span class="flow-num">02</span>
+        <span class="flow-text">
+          <code>-D &lt;database name&gt;</code> — selects a specific database and
+          returns its tables. This is where you identify what data the database holds.
+        </span>
+      </div>
+      <div class="flow-step">
+        <span class="flow-num">03</span>
+        <span class="flow-text">
+          <code>-D &lt;database name&gt; -T &lt;table name&gt; --dump</code> — dumps
+          the contents of a specific table. In this case, the users table — returning
+          usernames and hashed passwords.
+        </span>
+      </div>
+    </div>
+
+    <div class="code-block">
+      <span class="line"><span class="comment"># List all databases</span></span>
+      <span class="line"><span class="prompt">$</span> sqlmap -u "http://&lt;target-ip&gt;/vulnerabilities/sqli/?id=test" \</span>
+      <span class="line">  --cookie="&lt;cookie&gt;" --dbs</span>
+      <span class="line"> </span>
+      <span class="line"><span class="comment"># List tables in the target database</span></span>
+      <span class="line"><span class="prompt">$</span> sqlmap -u "http://&lt;target-ip&gt;/vulnerabilities/sqli/?id=test" \</span>
+      <span class="line">  --cookie="&lt;cookie&gt;" -D &lt;database&gt; --tables</span>
+      <span class="line"> </span>
+      <span class="line"><span class="comment"># Dump the users table</span></span>
+      <span class="line"><span class="prompt">$</span> sqlmap -u "http://&lt;target-ip&gt;/vulnerabilities/sqli/?id=test" \</span>
+      <span class="line">  --cookie="&lt;cookie&gt;" -D &lt;database&gt; -T users --dump</span>
+    </div>
+
+    <h2>Step 4 — Cracking the Hashes and Logging In</h2>
+    <p>
+      The users table returned usernames alongside hashed passwords. The hashes were
+      cracked using an online hash cracker — the same approach used in the EternalBlue
+      writeup, where Windows NTLM hashes were looked up in precomputed tables.
+    </p>
+    <p>
+      With the plain text password recovered, logging into the account was
+      straightforward — and the flag was retrieved from inside.
+    </p>
+
+    <div class="callout red">
+      <div class="callout-label">The real lesson — database encryption</div>
+      <p>
+        The reason the hashes were crackable so easily comes down to weak hashing.
+        A database storing passwords with strong hashing — bcrypt, for example — means
+        that even a complete SQL injection dump doesn't immediately hand over usable
+        credentials. The SQL injection vulnerability and the weak password hashing
+        together are what made this attack successful end to end. Fix either one and
+        the impact is significantly reduced.
+      </p>
+    </div>
+
+    <h2>Defender Perspective — Preventing SQL Injection</h2>
+    <p>
+      The defence against SQL injection is input sanitisation — specifically,
+      not allowing user input to be interpreted as SQL code. This means stripping
+      or rejecting characters like single quotes that are used to break out of SQL
+      strings, and never allowing raw user input to be concatenated directly into
+      a SQL query.
+    </p>
+    <p>
+      The correct technical approach is parameterised queries — separating the SQL
+      code from the user input entirely so they can never be combined. No matter
+      what a user types into the field, it is treated as data, never as a command.
+    </p>
+
+    <h2>Key Takeaways</h2>
+    <div class="takeaways">
+      <ul>
+        <li>SQL injection inserts malicious code into input fields to manipulate a database into returning data it shouldn't</li>
+        <li>Session cookies are required when the vulnerable parameter sits behind authentication — Burp Suite intercepts them cleanly</li>
+        <li>Database enumeration follows a logical order — databases first, then tables, then contents</li>
+        <li>A successful SQL injection combined with weak password hashing leads to full credential compromise</li>
+        <li>Input sanitisation and parameterised queries are the primary defences — user input should never be treated as a SQL command</li>
+        <li>Strong password hashing limits the damage even when a database is successfully dumped</li>
+      </ul>
+    </div>
+
+    <h2>What's Next</h2>
+    <p>
+      More writeups to come. Currently running through the splunk fundamentals, and finishing up TryHackMe's Cybersecurity 101 path
+    </p>
+
+  </div>
+
+  <footer>
+    <div class="footer-text">gerry-lees.github.io — cybersecurity portfolio</div>
+  </footer>
+
+</div>
+</body>
+</html>

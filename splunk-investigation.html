@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Splunk — Gerry | Cybersecurity Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #0a0e13;
+      --surface:  #111820;
+      --border:   #1e2d3d;
+      --accent:   #00d4ff;
+      --accent2:  #00ff9d;
+      --text:     #c9d8e8;
+      --muted:    #4a6072;
+      --mono:     'Share Tech Mono', monospace;
+      --sans:     'DM Sans', sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-weight: 300;
+      min-height: 100vh;
+      line-height: 1.8;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    nav { padding: 2rem 0 0; }
+
+    nav a {
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    nav a:hover { color: var(--accent); }
+    nav a::before { content: '← '; }
+
+    header {
+      padding: 3rem 0 2.5rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 3rem;
+    }
+
+    .meta {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-bottom: 1rem;
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .meta .tag { color: var(--accent2); }
+
+    h1 {
+      font-family: var(--mono);
+      font-size: clamp(1.4rem, 4vw, 2rem);
+      color: #fff;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+
+    .subtitle {
+      font-size: 1.05rem;
+      color: var(--muted);
+      max-width: 580px;
+    }
+
+    .content h2 {
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      color: var(--accent);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin: 2.5rem 0 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .content h2::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .content p {
+      font-size: 1rem;
+      color: var(--text);
+      margin-bottom: 1.2rem;
+    }
+
+    .code-block {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      padding: 1.2rem 1.4rem;
+      margin: 1.5rem 0;
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      overflow-x: auto;
+    }
+
+    .code-block .line { display: block; color: var(--text); margin-bottom: 0.3rem; }
+    .code-block .line:last-child { margin-bottom: 0; }
+    .code-block .prompt { color: var(--accent2); }
+    .code-block .comment { color: var(--muted); }
+    .code-block .highlight { color: var(--accent); }
+
+    .callout {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent2);
+      padding: 1.2rem 1.4rem;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+    }
+
+    .callout.red { border-left-color: #ff6b6b; }
+
+    .callout-label {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--accent2);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    .callout.red .callout-label { color: #ff6b6b; }
+
+    .investigation-flow {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 1.4rem 1.6rem;
+      margin: 1.5rem 0;
+    }
+
+    .flow-step {
+      display: flex;
+      gap: 1rem;
+      padding: 0.6rem 0;
+      border-bottom: 1px solid var(--border);
+      align-items: flex-start;
+    }
+
+    .flow-step:last-child { border-bottom: none; }
+
+    .flow-num {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--accent);
+      min-width: 1.5rem;
+      padding-top: 0.15rem;
+    }
+
+    .flow-text {
+      font-size: 0.95rem;
+      color: var(--text);
+    }
+
+    .flow-text code {
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      color: var(--accent2);
+    }
+
+    .finding {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid #ff6b6b;
+      padding: 1.2rem 1.4rem;
+      margin: 1.5rem 0;
+      font-family: var(--mono);
+      font-size: 0.85rem;
+    }
+
+    .finding-label {
+      font-size: 0.72rem;
+      color: #ff6b6b;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.6rem;
+    }
+
+    .finding-line {
+      display: block;
+      color: var(--text);
+      margin-bottom: 0.3rem;
+    }
+
+    .finding-line .fail { color: #ff6b6b; }
+    .finding-line .success { color: var(--accent2); }
+
+    .takeaways {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 1.4rem 1.6rem;
+      margin: 2rem 0;
+    }
+
+    .takeaways ul { list-style: none; padding: 0; }
+
+    .takeaways ul li {
+      font-size: 0.95rem;
+      color: var(--text);
+      padding: 0.4rem 0;
+      padding-left: 1.2rem;
+      position: relative;
+    }
+
+    .takeaways ul li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+      font-family: var(--mono);
+    }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem 0;
+      margin-top: 4rem;
+    }
+
+    .footer-text {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <nav><a href="/writeups/">writeups</a></nav>
+
+  <header>
+    <div class="meta">
+      <span>2026</span>
+      <span class="tag">#splunk</span>
+      <span class="tag">#siem</span>
+      <span class="tag">#blue-team</span>
+      <span class="tag">#incident-response</span>
+      <span>Self-directed — Splunk Enterprise</span>
+    </div>
+    <h1>Splunk — Investigating a<br/>Brute Force Attack and Account Compromise</h1>
+    <p class="subtitle">
+      Setting up Splunk locally, ingesting custom logs, and working through
+      a full SOC investigation workflow from initial search to confirmed compromise.
+    </p>
+  </header>
+
+  <div class="content">
+
+    <h2>What is Splunk</h2>
+    <p>
+      Splunk is a SIEM — Security Information and Event Management. It collects logs
+      from all devices, servers, and services on a network and presents them as
+      searchable events. Rather than manually reading through raw log files across
+      dozens of machines, a SOC analyst uses Splunk to search, filter, and correlate
+      events across the entire environment from a single interface.
+    </p>
+    <p>
+      The events it surfaces — failed logins, successful logins, event log wipes,
+      privilege escalations — are the raw material of a SOC investigation. Being able
+      to query and analyse these quickly is a core analyst skill.
+    </p>
+
+    <h2>Setup</h2>
+    <p>
+      Rather than waiting for a guided lab, I installed Splunk Enterprise locally,
+      launched it, and accessed Splunk Web via localhost. I then generated a custom
+      auth.log file using an AI-generated scenario — a realistic set of authentication
+      events with a hidden incident embedded in the data — and uploaded it into Splunk
+      as the data source for the investigation.
+    </p>
+    <p>
+      The scenario: find something suspicious in the login attempts, identify what
+      happened, and determine whether any accounts were compromised.
+    </p>
+
+    <h2>The Investigation</h2>
+
+    <div class="investigation-flow">
+      <div class="flow-step">
+        <span class="flow-num">01</span>
+        <span class="flow-text">
+          Started with a broad search across all indexed data for failed login events:
+          <br/><code>index=* "Failed password"</code>
+        </span>
+      </div>
+      <div class="flow-step">
+        <span class="flow-num">02</span>
+        <span class="flow-text">
+          Used <code>| stats count</code> to get a total event count — establishing
+          the scale of the activity before digging in.
+        </span>
+      </div>
+      <div class="flow-step">
+        <span class="flow-num">03</span>
+        <span class="flow-text">
+          Noticed IP address was not available as a filterable field by default.
+          Created a field extraction for <code>src_ip</code> — mapping the IP address
+          field so Splunk could group and count by it. Field extractions are configured
+          per environment because every organisation labels and structures their logs
+          differently.
+        </span>
+      </div>
+      <div class="flow-step">
+        <span class="flow-num">04</span>
+        <span class="flow-text">
+          Ran <code>| stats count by src_ip</code> to see how many failed login
+          attempts each IP address had made. This immediately surfaced the most active
+          attackers as clear numbers — far faster than counting manually through raw
+          events, and practically impossible to do by hand at real log volumes.
+        </span>
+      </div>
+      <div class="flow-step">
+        <span class="flow-num">05</span>
+        <span class="flow-text">
+          Added <code>_raw</code> to the search to inspect the raw log lines. Identified
+          brute force behaviour — multiple attempts across multiple usernames within a
+          15 second window. The speed of attempts made clear this was automated, not manual.
+        </span>
+      </div>
+      <div class="flow-step">
+        <span class="flow-num">06</span>
+        <span class="flow-text">
+          Narrowed focus to two specific IP addresses that were repeatedly attempting
+          to access a root account. Searched for <code>"Accepted password"</code> from
+          those IPs and compared against the failed attempts.
+        </span>
+      </div>
+      <div class="flow-step">
+        <span class="flow-num">07</span>
+        <span class="flow-text">
+          Identified the pattern — multiple failures followed by a successful login
+          from the same IP against the same account. Confirmed account compromise.
+        </span>
+      </div>
+    </div>
+
+    <h2>The Finding</h2>
+
+    <div class="finding">
+      <div class="finding-label">Confirmed compromise — 203.0.113.50 → root</div>
+      <span class="finding-line"><span class="fail">FAIL</span> — 203.0.113.50 → root — attempt 1</span>
+      <span class="finding-line"><span class="fail">FAIL</span> — 203.0.113.50 → root — attempt 2</span>
+      <span class="finding-line"><span class="fail">FAIL</span> — 203.0.113.50 → root — attempt 3</span>
+      <span class="finding-line"><span class="fail">FAIL</span> — 203.0.113.50 → root — attempt 4</span>
+      <span class="finding-line"><span class="fail">FAIL</span> — 203.0.113.50 → root — attempt 5</span>
+      <span class="finding-line"><span class="success">SUCCESS</span> — 203.0.113.50 → root — account compromised</span>
+    </div>
+
+    <p>
+      IP address 203.0.113.50 conducted an automated brute force attack against the
+      root account, with all attempts occurring within a 15 second window. After
+      multiple failed attempts, the correct password was found and the root account
+      was successfully accessed.
+    </p>
+
+    <h2>Recommended Response Steps</h2>
+    <p>
+      In a real environment, the response to this finding would follow this order:
+    </p>
+    <p>
+      First, isolate the threat — block the attacker's IP address immediately to
+      prevent further access. Second, cleanse the compromised account — rotate
+      credentials, review and revoke any sessions or tokens created during the
+      compromise. Third, investigate what the account did — review all activity
+      from the root account following the successful login, perform file forensics
+      to assess what was accessed, modified, or exfiltrated.
+    </p>
+
+    <div class="callout red">
+      <div class="callout-label">Why root matters</div>
+      <p>
+        Root is the highest privilege account on a Linux system. A compromised root
+        account means the attacker has unrestricted access to the entire machine —
+        they can read any file, modify any configuration, install anything, or destroy
+        everything. A successful brute force against root is a critical incident.
+      </p>
+    </div>
+
+    <h2>Key Takeaways</h2>
+    <div class="takeaways">
+      <ul>
+        <li>Splunk aggregates logs from across an environment into searchable events — essential for SOC work at any real scale</li>
+        <li>Field extractions are required when log fields aren't mapped by default — every environment structures logs differently</li>
+        <li><code>| stats count by src_ip</code> surfaces attack patterns immediately — manual counting is impractical at real log volumes</li>
+        <li>Multiple failed logins followed by a success from the same IP against the same account is a confirmed brute force and compromise pattern</li>
+        <li>Attack speed is an indicator — 15 seconds across multiple attempts means automated tooling, not a human typing</li>
+        <li>Response order matters — isolate first, cleanse second, investigate damage third</li>
+      </ul>
+    </div>
+
+    <h2>What's Next</h2>
+    <p>
+      Continuing with Splunk Fundamentals soon to move into SOC Level 1 on TryHackMe.
+      More investigation writeups to follow as the scenarios get more complex.
+    </p>
+
+  </div>
+
+  <footer>
+    <div class="footer-text">gerry-lees.github.io — cybersecurity portfolio</div>
+  </footer>
+
+</div>
+</body>
+</html>

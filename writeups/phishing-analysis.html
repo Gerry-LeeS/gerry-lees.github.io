@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Phishing Analysis — Gerry | Cybersecurity Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #0a0e13;
+      --surface:  #111820;
+      --border:   #1e2d3d;
+      --accent:   #00d4ff;
+      --accent2:  #00ff9d;
+      --text:     #c9d8e8;
+      --muted:    #4a6072;
+      --mono:     'Share Tech Mono', monospace;
+      --sans:     'DM Sans', sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-weight: 300;
+      min-height: 100vh;
+      line-height: 1.8;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    nav { padding: 2rem 0 0; }
+
+    nav a {
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    nav a:hover { color: var(--accent); }
+    nav a::before { content: '← '; }
+
+    header {
+      padding: 3rem 0 2.5rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 3rem;
+    }
+
+    .meta {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-bottom: 1rem;
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .meta .tag { color: var(--accent2); }
+
+    h1 {
+      font-family: var(--mono);
+      font-size: clamp(1.4rem, 4vw, 2rem);
+      color: #fff;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+
+    .subtitle {
+      font-size: 1.05rem;
+      color: var(--muted);
+      max-width: 580px;
+    }
+
+    .content h2 {
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      color: var(--accent);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin: 2.5rem 0 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .content h2::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .content p {
+      font-size: 1rem;
+      color: var(--text);
+      margin-bottom: 1.2rem;
+    }
+
+    .code-block {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      padding: 1.2rem 1.4rem;
+      margin: 1.5rem 0;
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      overflow-x: auto;
+    }
+
+    .code-block .line { display: block; color: var(--text); margin-bottom: 0.3rem; }
+    .code-block .line:last-child { margin-bottom: 0; }
+    .code-block .comment { color: var(--muted); }
+    .code-block .highlight { color: var(--accent); }
+    .code-block .danger { color: #ff6b6b; }
+
+    .callout {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent2);
+      padding: 1.2rem 1.4rem;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+    }
+
+    .callout.red { border-left-color: #ff6b6b; }
+
+    .callout-label {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--accent2);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    .callout.red .callout-label { color: #ff6b6b; }
+
+    .indicators {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 1.4rem 1.6rem;
+      margin: 1.5rem 0;
+    }
+
+    .indicator {
+      display: flex;
+      gap: 1rem;
+      padding: 0.6rem 0;
+      border-bottom: 1px solid var(--border);
+      align-items: flex-start;
+    }
+
+    .indicator:last-child { border-bottom: none; }
+
+    .indicator-flag {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: #ff6b6b;
+      min-width: 4rem;
+      padding-top: 0.15rem;
+      text-transform: uppercase;
+    }
+
+    .indicator-text {
+      font-size: 0.92rem;
+      color: var(--text);
+    }
+
+    .takeaways {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 1.4rem 1.6rem;
+      margin: 2rem 0;
+    }
+
+    .takeaways ul { list-style: none; padding: 0; }
+
+    .takeaways ul li {
+      font-size: 0.95rem;
+      color: var(--text);
+      padding: 0.4rem 0;
+      padding-left: 1.2rem;
+      position: relative;
+    }
+
+    .takeaways ul li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+      font-family: var(--mono);
+    }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem 0;
+      margin-top: 4rem;
+    }
+
+    .footer-text {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <nav><a href="/writeups/">writeups</a></nav>
+
+  <header>
+    <div class="meta">
+      <span>2026</span>
+      <span class="tag">#phishing</span>
+      <span class="tag">#email-analysis</span>
+      <span class="tag">#blue-team</span>
+      <span>TryHackMe — SOC Level 1</span>
+    </div>
+    <h1>Phishing Analysis —<br/>Headers, Attachments, and Malicious Files</h1>
+    <p class="subtitle">
+      Analysing phishing emails through header inspection, typosquatting detection,
+      file hashing, VirusTotal, and REMnux — including a two-stage payload disguised
+      as a PDF.
+    </p>
+  </header>
+
+  <div class="content">
+
+    <h2>Why Phishing Analysis Matters</h2>
+    <p>
+      Phishing is one of the most common initial access vectors in real breaches.
+      A SOC analyst needs to be able to triage a reported phishing email quickly —
+      determine whether it's malicious, what it's trying to do, and whether anyone
+      clicked anything. This section of SOC Level 1 covers the practical skills
+      for doing exactly that.
+    </p>
+
+    <h2>Email Headers — Finding the Real Source</h2>
+    <p>
+      The displayed sender name and address in an email can say anything — they're
+      trivially easy to fake. The real source of an email is in the headers, which
+      contain the actual sending server's IP address and routing information.
+    </p>
+    <p>
+      Viewing the page source or raw headers of a suspicious email exposes the
+      originating IP. When that IP doesn't match the domain the sender is claiming
+      to be from, that mismatch is a red flag — the email wasn't sent from the
+      legitimate server it claims to represent. The sending server belongs to the
+      attacker, not the organisation being impersonated.
+    </p>
+
+    <div class="code-block">
+      <span class="line"><span class="comment"># Key headers to check in a suspicious email</span></span>
+      <span class="line"><span class="highlight">Received:</span>        — shows the actual sending server and IP</span>
+      <span class="line"><span class="highlight">From:</span>             — the displayed sender — easily faked</span>
+      <span class="line"><span class="highlight">Reply-To:</span>         — where replies go — often different from From in phishing</span>
+      <span class="line"><span class="highlight">Return-Path:</span>      — where bounces go — another indicator of real origin</span>
+    </div>
+
+    <h2>Typosquatting</h2>
+    <p>
+      Typosquatting is the technique of registering a domain name that closely
+      resembles a legitimate one — close enough that a quick glance won't catch it.
+      A classic example would be using <code>goog1e.com</code> instead of
+      <code>google.com</code>, substituting a number for a letter.
+    </p>
+    <p>
+      In phishing emails this is used to make the sender address look legitimate at
+      a glance. Someone checking quickly whether an email came from a real company
+      domain might not notice a single character substitution or an added letter.
+      Slow down and check carefully — the domain needs to match exactly.
+    </p>
+
+    <div class="callout red">
+      <div class="callout-label">Common typosquatting patterns</div>
+      <p>
+        Character substitution (o → 0, l → 1), added characters (paypa1.com →
+        paypa1l.com), swapped characters (amazon → amzaon), different TLD
+        (company.com → company.net). Any of these on a sending domain warrants
+        immediate suspicion.
+      </p>
+    </div>
+
+    <h2>File Analysis — Hashing and VirusTotal</h2>
+    <p>
+      When a suspicious attachment needs to be analysed, the rule is simple —
+      never run it. Instead, hash it and check the hash, or upload it to a sandbox.
+    </p>
+    <p>
+      Hashing the file preserves its integrity and gives you a fingerprint to check
+      against threat intelligence databases. Some malware is capable of modifying
+      itself to avoid detection, but at a specific point in time a hash is an exact
+      identifier of that specific file.
+    </p>
+    <p>
+      VirusTotal takes that hash and checks it against a database of known malicious
+      files — but it also does more than that. It runs the file through dozens of
+      antivirus engines simultaneously and returns what each one detected. Even if
+      the specific hash isn't in the database yet, the engines may still flag
+      the behaviour or characteristics of the file.
+    </p>
+
+    <div class="code-block">
+      <span class="line"><span class="comment"># Hash a file without running it</span></span>
+      <span class="line">sha256sum suspicious_file.pdf</span>
+      <span class="line"> </span>
+      <span class="line"><span class="comment"># Submit the hash to VirusTotal rather than the file itself</span></span>
+      <span class="line"><span class="comment"># if the file contains sensitive data you don't want uploaded</span></span>
+    </div>
+
+    <h2>REMnux — Analysing a Disguised Executable</h2>
+    <p>
+      One exercise involved analysing a file named <code>invoice.pdf</code> that was
+      flagged as suspicious. On Windows, the file showed as a shortcut rather than
+      a PDF — an immediate indicator that something was wrong. A legitimate PDF has
+      no reason to be a Windows shortcut file.
+    </p>
+    <p>
+      The file was transferred to a REMnux Linux environment for safe analysis
+      without risk of execution. REMnux is a Linux distribution specifically built
+      for malware analysis — it provides tools to examine files without running them.
+    </p>
+    <p>
+      Analysis revealed that the shortcut was configured to execute a PowerShell
+      command on click. That command would disable a security alert and then reach
+      out to an external location to download a second stage payload — the actual
+      malware. The initial file itself was essentially just a delivery mechanism,
+      clean enough to avoid basic detection, with the real malicious code pulled
+      down after execution.
+    </p>
+
+    <div class="callout red">
+      <div class="callout-label">Two-stage payloads</div>
+      <p>
+        Delivering malware in two stages is a common evasion technique. The first
+        file — in this case a disguised shortcut — may pass basic checks because
+        it doesn't contain the malicious code directly. The real payload only arrives
+        after the victim has already executed the first file. This is why file type
+        verification and sandboxed analysis matter even for files that initially
+        appear clean.
+      </p>
+    </div>
+
+    <h2>Phishing Indicators — What to Look For</h2>
+
+    <div class="indicators">
+      <div class="indicator">
+        <span class="indicator-flag">Urgency</span>
+        <span class="indicator-text">Subject lines or body text designed to create panic or pressure — "Your account will be closed", "Immediate action required". The goal is to make the target act before thinking.</span>
+      </div>
+      <div class="indicator">
+        <span class="indicator-flag">Grammar</span>
+        <span class="indicator-text">Poor spelling and grammar. Legitimate companies typically have someone review outbound communications. Errors are a common sign of a non-native speaker or automated generation.</span>
+      </div>
+      <div class="indicator">
+        <span class="indicator-flag">Domain</span>
+        <span class="indicator-text">Sender domain doesn't exactly match the organisation being impersonated. Check for typosquatting — character substitutions, added letters, different TLDs.</span>
+      </div>
+      <div class="indicator">
+        <span class="indicator-flag">Headers</span>
+        <span class="indicator-text">Source IP in the email headers doesn't match the claimed sender domain. The Reply-To address differs from the From address.</span>
+      </div>
+      <div class="indicator">
+        <span class="indicator-flag">Attachments</span>
+        <span class="indicator-text">Any attachment should be treated with suspicion. An executable masquerading as a document, a shortcut file named as a PDF, or any file prompting you to enable macros are all red flags.</span>
+      </div>
+      <div class="indicator">
+        <span class="indicator-flag">Spear</span>
+        <span class="indicator-text">Spear phishing is targeted — the attacker knows the victim's name, role, and what they might be expecting. "Hi John, here's the Q1 report you requested" is far harder to detect than a generic phishing attempt because everything matches what the target expects to receive.</span>
+      </div>
+    </div>
+
+    <h2>Key Takeaways</h2>
+    <div class="takeaways">
+      <ul>
+        <li>Email headers reveal the real source IP — a mismatch with the claimed sender domain is an immediate red flag</li>
+        <li>Typosquatting relies on a quick glance — slow down and verify the domain character by character</li>
+        <li>Never run a suspicious file — hash it and check against VirusTotal, or analyse it in a safe environment like REMnux</li>
+        <li>VirusTotal runs files through dozens of antivirus engines simultaneously — more thorough than a single hash lookup</li>
+        <li>A file showing as a Windows shortcut when named as a PDF is an immediate indicator of disguise</li>
+        <li>Two-stage payloads keep the initial file clean — the real malware arrives only after execution</li>
+        <li>Spear phishing is the hardest to detect — targeted, personalised, and designed to match exactly what the victim expects</li>
+      </ul>
+    </div>
+
+    <h2>What's Next</h2>
+    <p>
+      Continuing through SOC Level 1 on TryHackMe alongside further study into Wireshark.
+    </p>
+
+  </div>
+
+  <footer>
+    <div class="footer-text">gerry-lees.github.io — cybersecurity portfolio</div>
+  </footer>
+
+</div>
+</body>
+</html>

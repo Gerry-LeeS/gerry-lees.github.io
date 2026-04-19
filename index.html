@@ -352,202 +352,71 @@
 
   </div>
 
-  <!-- ALL WRITEUPS -->
-  <div class="section-label">All Writeups</div>
-
-  <div class="filters">
-    <button class="filter-btn active" data-filter="all">all</button>
-    <button class="filter-btn" data-filter="linux">#linux</button>
-    <button class="filter-btn" data-filter="networking">#networking</button>
-    <button class="filter-btn" data-filter="windows">#windows</button>
-    <button class="filter-btn" data-filter="blue-team">#blue-team</button>
-    <button class="filter-btn" data-filter="red-team">#red-team</button>
-    <button class="filter-btn" data-filter="tools">#tools</button>
-  </div>
-
-  <div class="writeup-list" id="writeupList">
-
-    <a class="writeup-item" href="phishing-analysis.html" data-tags="blue-team tools">
-      <span class="writeup-num">12</span>
-      <div class="writeup-body">
-        <div class="writeup-meta">
-          <span class="tag">#phishing</span>
-          <span class="tag">#email-analysis</span>
-          <span class="tag">#blue-team</span>
-          <span>TryHackMe — SOC Level 1</span>
-        </div>
-        <div class="writeup-title">Phishing Analysis — Headers, Attachments, and Malicious Files</div>
-        <div class="writeup-desc">Email header inspection, typosquatting detection, VirusTotal, REMnux, and a two-stage payload disguised as a PDF.</div>
-      </div>
-      <span class="writeup-arrow">→</span>
-    </a>
-
-    <a class="writeup-item" href="splunk-attack-chain.html" data-tags="blue-team tools">
-      <span class="writeup-num">11</span>
-      <div class="writeup-body">
-        <div class="writeup-meta">
+ <!-- LATEST WRITEUPS -->
+  <section>
+    <div class="section-label">Latest Writeups</div>
+    <div class="cards">
+ 
+      <a class="card" href="writeups/splunk-attack-chain.html">
+        <div class="card-meta">
           <span class="tag">#splunk</span>
           <span class="tag">#siem</span>
           <span class="tag">#incident-response</span>
-          <span>Self-directed — Splunk Enterprise</span>
         </div>
-        <div class="writeup-title">Splunk — Tracing a Full Attack Chain Across Three Log Sources</div>
-        <div class="writeup-desc">Starting from a single firewall alert, tracing an attack from initial access through reverse shell, privilege escalation, persistence, and data exfiltration.</div>
-      </div>
-      <span class="writeup-arrow">→</span>
-    </a>
-
-    <a class="writeup-item" href="sqlmap-burpsuite.html" data-tags="tools red-team">
-      <span class="writeup-num">10</span>
-      <div class="writeup-body">
-        <div class="writeup-meta">
+        <h3>Splunk — Tracing a Full Attack Chain Across Three Log Sources</h3>
+        <p>From a single firewall alert to a fully traced attack — reverse shell, privilege escalation, persistence, and exfiltration.</p>
+        <span class="card-arrow">→</span>
+      </a>
+ 
+      <a class="card" href="writeups/phishing-analysis.html">
+        <div class="card-meta">
+          <span class="tag">#phishing</span>
+          <span class="tag">#email-analysis</span>
+          <span class="tag">#blue-team</span>
+        </div>
+        <h3>Phishing Analysis — Headers, Attachments, and Malicious Files</h3>
+        <p>Email header inspection, typosquatting, VirusTotal, REMnux, and a two-stage payload disguised as a PDF.</p>
+        <span class="card-arrow">→</span>
+      </a>
+ 
+      <a class="card" href="writeups/sqlmap-burpsuite.html">
+        <div class="card-meta">
           <span class="tag">#sqlmap</span>
           <span class="tag">#burpsuite</span>
           <span class="tag">#sql-injection</span>
-          <span>TryHackMe — Cybersecurity 101</span>
         </div>
-        <div class="writeup-title">SQLmap & Burp Suite — Exploiting SQL Injection to Dump a Database</div>
-        <div class="writeup-desc">Using Burp Suite to capture a session cookie, then SQLmap to enumerate and dump a database — from vulnerability discovery to credential recovery.</div>
+        <h3>SQLmap & Burp Suite — Exploiting SQL Injection to Dump a Database</h3>
+        <p>Using Burp Suite to capture a session cookie, then SQLmap to enumerate and dump a database.</p>
+        <span class="card-arrow">→</span>
+      </a>
+ 
+    </div>
+    <a href="writeups/index.html" style="display:inline-block; margin-top:1rem; font-family:var(--mono); font-size:0.8rem; color:var(--muted); text-decoration:none; transition:color 0.2s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--muted)'">view all writeups →</a>
+  </section>
+ 
+  <!-- TRAINING & PROGRESS -->
+  <section>
+    <div class="section-label">Training & Progress</div>
+    <div class="training-grid">
+ 
+      <div class="training-col done">
+        <h3>Completed</h3>
+        <div class="training-item">CompTIA Security+ (SY0-701)</div>
+        <div class="training-item">TryHackMe — Cybersecurity 101</div>
+        <div class="training-item">Splunk Enterprise — self-directed labs</div>
+        <div class="training-item">Python — PCEP certified</div>
       </div>
-      <span class="writeup-arrow">→</span>
-    </a>
-
-    <a class="writeup-item" href="splunk-investigation.html" data-tags="blue-team tools">
-      <span class="writeup-num">09</span>
-      <div class="writeup-body">
-        <div class="writeup-meta">
-          <span class="tag">#splunk</span>
-          <span class="tag">#siem</span>
-          <span class="tag">#blue-team</span>
-          <span>Self-directed — Splunk Enterprise</span>
-        </div>
-        <div class="writeup-title">Splunk — Investigating a Brute Force Attack and Account Compromise</div>
-        <div class="writeup-desc">Setting up Splunk locally, ingesting custom logs, and working through a full SOC investigation from initial search to confirmed root account compromise.</div>
+ 
+      <div class="training-col studying">
+        <h3>Currently Studying</h3>
+        <div class="training-item">TryHackMe — SOC Level 1</div>
+        <div class="training-item">SIEM & log analysis — Splunk</div>
+        <div class="training-item">Wireshark & network traffic analysis</div>
+        <div class="training-item">Phishing analysis & email forensics</div>
       </div>
-      <span class="writeup-arrow">→</span>
-    </a>
-
-    <a class="writeup-item" href="shells.html" data-tags="tools red-team blue-team">
-      <span class="writeup-num">08</span>
-      <div class="writeup-body">
-        <div class="writeup-meta">
-          <span class="tag">#shells</span>
-          <span class="tag">#web-shell</span>
-          <span class="tag">#blue-team</span>
-          <span>TryHackMe — Cybersecurity 101</span>
-        </div>
-        <div class="writeup-title">Shells — Reverse, Bind, and Web Shells</div>
-        <div class="writeup-desc">How shells work technically, stdin/stdout/stderr, reverse vs bind shells, and a hands-on web shell upload exercise.</div>
-      </div>
-      <span class="writeup-arrow">→</span>
-    </a>
-
-    <a class="writeup-item" href="hydra-brute-force.html" data-tags="tools red-team">
-      <span class="writeup-num">07</span>
-      <div class="writeup-body">
-        <div class="writeup-meta">
-          <span class="tag">#hydra</span>
-          <span class="tag">#brute-force</span>
-          <span class="tag">#red-team</span>
-          <span>TryHackMe — Cybersecurity 101</span>
-        </div>
-        <div class="writeup-title">Hydra — Brute Force Attacks on Web Forms and SSH</div>
-        <div class="writeup-desc">Using Hydra to brute force a web login and SSH service, and what brute force looks like from a defender's perspective.</div>
-      </div>
-      <span class="writeup-arrow">→</span>
-    </a>
-
-    <a class="writeup-item" href="cve-2024-21413-moniker-link.html" data-tags="exploitation windows blue-team">
-      <span class="writeup-num">06</span>
-      <div class="writeup-body">
-        <div class="writeup-meta">
-          <span class="tag">#CVE-2024-21413</span>
-          <span class="tag">#exploitation</span>
-          <span class="tag">#blue-team</span>
-          <span>TryHackMe — Cybersecurity 101</span>
-        </div>
-        <div class="writeup-title">CVE-2024-21413 — The Moniker Link Vulnerability</div>
-        <div class="writeup-desc">How a single character bypasses Outlook's security checks, captures NTLM credentials silently, and what it means for patch management.</div>
-      </div>
-      <span class="writeup-arrow">→</span>
-    </a>
-
-    <a class="writeup-item" href="metasploit-eternalblue.html" data-tags="exploitation windows tools">
-      <span class="writeup-num">05</span>
-      <div class="writeup-body">
-        <div class="writeup-meta">
-          <span class="tag">#CVE-2017-0144</span>
-          <span class="tag">#metasploit</span>
-          <span class="tag">#exploitation</span>
-          <span>TryHackMe — Cybersecurity 101</span>
-        </div>
-        <div class="writeup-title">Metasploit & EternalBlue — Gaining Access to a Windows Machine</div>
-        <div class="writeup-desc">From initial scan to admin access — identifying EternalBlue via Nmap, exploiting it with Metasploit, and recovering credentials and flags.</div>
-      </div>
-      <span class="writeup-arrow">→</span>
-    </a>
-
-    <a class="writeup-item" href="hashing-and-password-cracking.html" data-tags="tools blue-team">
-      <span class="writeup-num">04</span>
-      <div class="writeup-body">
-        <div class="writeup-meta">
-          <span class="tag">#cryptography</span>
-          <span class="tag">#hashing</span>
-          <span class="tag">#tools</span>
-          <span>TryHackMe — Cybersecurity 101</span>
-        </div>
-        <div class="writeup-title">Hashing & Password Cracking — Hashcat and John the Ripper</div>
-        <div class="writeup-desc">Why passwords are hashed, how cracking tools work, Windows vs Linux credential storage, and what this means for defenders.</div>
-      </div>
-      <span class="writeup-arrow">→</span>
-    </a>
-
-    <a class="writeup-item" href="ports-and-protocols.html" data-tags="networking blue-team">
-      <span class="writeup-num">03</span>
-      <div class="writeup-body">
-        <div class="writeup-meta">
-          <span class="tag">#networking</span>
-          <span class="tag">#ports</span>
-          <span class="tag">#blue-team</span>
-          <span>TryHackMe — Cybersecurity 101</span>
-        </div>
-        <div class="writeup-title">Ports & Protocols — What Every SOC Analyst Needs to Know</div>
-        <div class="writeup-desc">Key ports, why insecure versions still exist, DNS tunneling, and what suspicious port activity looks like from a defender's perspective.</div>
-      </div>
-      <span class="writeup-arrow">→</span>
-    </a>
-
-    <a class="writeup-item" href="nmap-basics.html" data-tags="networking tools">
-      <span class="writeup-num">02</span>
-      <div class="writeup-body">
-        <div class="writeup-meta">
-          <span class="tag">#nmap</span>
-          <span class="tag">#networking</span>
-          <span class="tag">#reconnaissance</span>
-          <span>TryHackMe — Cybersecurity 101</span>
-        </div>
-        <div class="writeup-title">Nmap — Scanning, Open Ports, and What They Reveal</div>
-        <div class="writeup-desc">Finding open ports, identifying a hidden service on a non-standard port, and understanding scan types from a defender's perspective.</div>
-      </div>
-      <span class="writeup-arrow">→</span>
-    </a>
-
-    <a class="writeup-item" href="linux-fundamentals.html" data-tags="linux blue-team">
-      <span class="writeup-num">01</span>
-      <div class="writeup-body">
-        <div class="writeup-meta">
-          <span class="tag">#linux</span>
-          <span class="tag">#cli</span>
-          <span class="tag">#blue-team</span>
-          <span>TryHackMe — Cybersecurity 101</span>
-        </div>
-        <div class="writeup-title">Linux Fundamentals — Why the Terminal Matters in Security</div>
-        <div class="writeup-desc">CLI navigation, SSH, file permissions, and why command line speed is critical for SOC analysts.</div>
-      </div>
-      <span class="writeup-arrow">→</span>
-    </a>
-
-  </div>
+ 
+    </div>
+  </section>
 
   <div class="empty" id="emptyState">no writeups found for this tag yet.</div>
 
